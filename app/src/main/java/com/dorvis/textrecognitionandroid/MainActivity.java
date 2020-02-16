@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int requestPermissionID = 101;
 
+    private static long lastTimestamp = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,13 +127,20 @@ public class MainActivity extends AppCompatActivity {
                         mTextView.post(new Runnable() {
                             @Override
                             public void run() {
+                                long currentTimestamp = System.currentTimeMillis();
+                                if(lastTimestamp>=0) {
+                                    mTextView.setText("Processing time: " + (currentTimestamp - lastTimestamp) + " ms\n");
+                                }
+                                else mTextView.setText("");
+                                lastTimestamp = currentTimestamp;
+
                                 StringBuilder stringBuilder = new StringBuilder();
                                 for(int i=0;i<items.size();i++){
                                     TextBlock item = items.valueAt(i);
                                     stringBuilder.append(item.getValue());
                                     stringBuilder.append("\n");
                                 }
-                                mTextView.setText(stringBuilder.toString());
+                                mTextView.append(stringBuilder.toString());
                             }
                         });
                     }
